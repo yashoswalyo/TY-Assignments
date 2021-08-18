@@ -28,13 +28,13 @@ class instructionSet(object):
   ]
 
 if __name__ == '__main__':
-  filename = input("Enter your file name to check: ")
+  filename = input("Enter your file name to check(.asm): ")
   program = open(f'{filename}','r')
   lines = program.readlines()
   count = 0
   for line in lines:
     count+=1
-    print('--------------------------------------------\n')
+    print('--------------------------------------\n')
     operands = ['-','-']
     label = "-"
     instruction = line.strip()
@@ -68,6 +68,7 @@ if __name__ == '__main__':
         pass
       elif operands[1] in instructionSet.REGISTERS:
         print(f"Register {i} {CHECK_MARK_BUTTON} ")
+        
         pass
       else:
         print(f"Register {CROSS_MARK} ")
