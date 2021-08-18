@@ -87,7 +87,6 @@ if __name__ == '__main__':
         pass
       pass
 
-
     elif inst in instructionSet.NO_OPERAND_INSTRUCTION:
       print(f"Instruction {CHECK_MARK_BUTTON} ")
       pass
