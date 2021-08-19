@@ -1,2 +1,2 @@
 # WEB Technology
-<center> This folder contains all Web technology assignments </center>
+<p align="center">This folder contains all Web technology assignments </p>
