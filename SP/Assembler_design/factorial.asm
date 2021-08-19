@@ -7,3 +7,6 @@ LOOP back
 ; to store the result at D000H 
 MOV [D000],AX 
 HLT
+
+START 5000H
+MOV
