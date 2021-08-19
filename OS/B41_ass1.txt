@@ -1,0 +1,20 @@
+1. passwd
+2. date
+3. wc -l /etc/passwd
+4. who
+5. man date > mydate
+6. mkdir mydir
+7. mv mydate mydir/
+8. cd mydir;cp mydate ourdate
+9. ls
+10. ls -l //(-rw-rw-r-- 1 yashoswal yashoswal 6444 Aug 19 13:09 ourdate)
+11. pwd //(/home/yashoswal/Documents/TY-Assignments/OS/mydir)
+12. mv * /home/yashoswal/
+13. cd ;ls
+14. head -5 mydate
+15. head -8 mydate
+16. rm -r /home/yashoswal/Documents/TY-Assignments/OS/mydir
+17. ls -l > list
+18. cat capitals1 capitals2 capitals3 > capitals
+19. cat capitals2 >> capitals
+20. wc -l < capitals
