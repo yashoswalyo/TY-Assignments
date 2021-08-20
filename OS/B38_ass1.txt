@@ -18,3 +18,9 @@
 18. cat capitals1 capitals2 capitals3 > capitals
 19. cat capitals2 >> capitals
 20. wc -l < capitals
+21. chmod 666 capitals
+22. chmod 466 capitals //(error writing file: permission denied)
+23. alias concat='cat capitals1 capitals2 capitals3 > capitals'
+24. 	$PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+	$HOME="/home/yashoswal"
+	$TERM="xterm-256color"
