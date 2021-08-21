@@ -1,3 +1,4 @@
+from io import open_code
 import os
 import sys
 # import iChecker
@@ -13,8 +14,8 @@ MOT={
 'DEC':['08',1],
 'DIV':['09',1],
 'READ':['0A',1],
-'END':['0B'],
-'START':['0C'],
+'END':['0B',-1],
+'START':['0C',-1],
 'ORIGIN':['0D'],   #address of next ins
 'LTORG':['0F'],    #Assigns address to literals
 'DS':['10'],
@@ -113,6 +114,20 @@ def getVariable(line):
 		return [tokens[0],tokens[2]]
 	else:
 		return False	
+
+def getOpcode(line):
+	l = str(line)
+	temp = l.split()
+	Opcode = None
+	nOpcode = 0
+	if ":" in temp:
+		if temp[0] not in MOT and "DC" not in temp:
+			print("[Error] Invalid OPCODE Used" , end =' ')
+			return -2
+		elif temp[2] not in MOT:
+			print("[Error] Invalid OPCODE Used" , end =' ')
+			return -2
+
 
 def pass_one(alp):
 	LC=0
