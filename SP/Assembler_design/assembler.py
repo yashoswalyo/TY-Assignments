@@ -1,7 +1,6 @@
 import os
 import sys
-
-from pyrogram.emoji import MOTOR_BOAT
+# import iChecker
 
 MOT=[
 ['PRINT','01',1],
@@ -30,12 +29,61 @@ MOT=[
 ['JNC','19']
 ]
 
+def isComment(line):
+	if line.find("//"):
+		return True
+	return False
+
+def isStart(line):
+	l = str(line)
+	l = l.split()
+	if "START" in l:
+		return True
+	return False
+
+def getStart(line):
+	l = str(line)
+	tokens = l.split()
+	if "START" in tokens and len(tokens)==2:
+		return tokens[1]
+	elif "START" in tokens and len(tokens)!=2:
+		return 0
+	else:
+		return False
+	
+def isEnd(line):
+	l=str(line)
+	l=l.split()
+	for "END" in l:
+		return True
+	return False
 
 def pass_one(alp):
 	LC=0
 	length = 20
 	value = 0
 	type = 'none'
+	f1 = open('tables/symbol_table.txt','a+')
+	f2 = open(file='tables/literal_table.txt',mode='a+')
+	f3 = open(file='tables/temp.txt',mode='a+')
+	label_table={}
+	symbol_table={}
+	end_flag = True
+	start_flag = True
+	tok = 0
+	line_no=0
+	for line in alp:
+		line.strip()
+		k = line.split()
+		if not(isComment(line)):
+			line_no+=1
+			label = 0
+			symbol = 0
+			tok = getStart(line)
+			if isEnd(line):
+				end_flag=False
+				break
+
 
 	return
 
@@ -47,5 +95,6 @@ def getFile():
 
 if __name__=='__main__':
 	alp=getFile()
+	# iChecker.main()
 	pass_one(alp)
 	print(MOT[1][2])

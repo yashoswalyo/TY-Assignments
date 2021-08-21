@@ -27,7 +27,7 @@ class instructionSet(object):
 		'CH', 'CL', 'DH', 'DL', 'DI', 'SI', 'BP', 'SP'
 	]
 
-if __name__ == '__main__':
+def main():
 	filename = input("Enter your file name to check(.asm): ")
 	program = open(f'{filename}','r')
 	lines = program.readlines()
