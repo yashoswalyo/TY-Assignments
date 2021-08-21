@@ -115,6 +115,7 @@ def getVariable(line):
 	else:
 		return False	
 
+
 def getOpcode(line):
 	l = str(line)
 	temp = l.split()
@@ -127,7 +128,40 @@ def getOpcode(line):
 		elif temp[2] not in MOT:
 			print("[Error] Invalid OPCODE Used" , end =' ')
 			return -2
+	for i in temp:
+		if i in MOT and nOpcode<0:
+			Opcode = i
+			nOpcode += 1
+	if nOpcode>1:
+		raise Exception("One of the Lines contains multiple OPCODES...")
+	else:
+		return Opcode
 
+def getOperand(line):
+	l = str(line)
+	temp = l.split()
+	opc = 0
+	error_flag=False
+	if ":" not in temp:
+		opc = temp[0]
+		if len(temp)>4:
+			error_flag = True
+	else:
+		opc = temp[2]
+		if len(temp)>4:
+			error_flag = True
+	if "DC" in temp:
+		opc = temp[1]
+	if error_flag:
+		print("[Error] OPCODE "+str(temp[0]) +" Supplied with too many arguments thab required at Line" , end =' ')
+		return -2
+	if MOT[opc][1] == 1 and temp[-1] in MOT:
+		print("[Error] OPCODE "+str(temp[-1]) +" Supplied with fewer arguments thab required at Line" , end =' ')
+		return -2
+	if temp[-1] not in MOT:
+		return temp[-1]
+	else:
+		return False
 
 def pass_one(alp):
 	LC=0
@@ -192,8 +226,34 @@ def pass_one(alp):
 						print("[Error] No inital value provided at Declaration of Variable "+str(getLabel(var[0]))+" at line "+str(line_no))
 						sys.exit(-1)
 						delAllFiles()
-			opcode = 0
-
+			opcode = getOpcode(line)
+			if opcode==-2:
+				print("at line "+str(line_no))
+				sys.exit(-1)
+				delAllFiles()
+			if getOperand(line) == -2:
+				print("at line "+str(line_no))
+				sys.exit(1)
+				delAllFiles()
+			if "DS" in line:
+				f1.writelines(str(LC)+" "+line[0]+" "+opcode+" " +str(getOperand(line)+" \n"))
+			else:
+				f1.writelines(str(LC)+ " " +opcode+ " " + "None" +"\n")
+			if not(isComment(line)):
+				if MOT[opcode][1]==0:
+					LC += 4
+				else:
+					LC += 12
+	if end_flag:
+		print("[Error] Missing END statement...")
+		sys.exit(-1)
+		delAllFiles()
+	if start_flag:
+		print("[Error] Missing START statement...")
+		sys.exit(-1)
+		delAllFiles()
+	error_flag = False
+			
 
 def getFile():
 	fileName=input("Enter file name: ")
