@@ -30,7 +30,7 @@ MOT={
 }
 
 def isComment(line):
-	if line.find("//"):
+	if line.find("//")!=-1:
 		return True
 	return False
 
@@ -97,6 +97,23 @@ def delAllFiles():
 	os.remove("tables/symbol_table.txt")
 	os.remove("output.txt")
 
+def hasVariable(line):
+	l = str(line)
+	tokens = l.split()
+	if "DW" in tokens:
+		return True
+	else:
+		return False
+
+
+def getVariable(line):
+	l = str(line)
+	tokens = l.split()
+	if hasVariable(line):
+		return [tokens[0],tokens[2]]
+	else:
+		return False	
+
 def pass_one(alp):
 	LC=0
 	length = 20
@@ -105,13 +122,16 @@ def pass_one(alp):
 	f1 = open('tables/symbol_table.txt','a+')
 	f2 = open(file='tables/literal_table.txt',mode='a+')
 	f3 = open(file='tables/temp.txt',mode='a+')
+	f4 = open(file='tables/label_table.txt',mode='a+')
 	label_table={}
 	symbol_table={}
 	end_flag = True
 	start_flag = True
 	tok = 0
 	line_no=0
+	print("Initializing Part 1 assembler")
 	for line in alp:
+		print(line_no)
 		line.strip()
 		k = line.split()
 		if not(isComment(line)):
@@ -131,12 +151,33 @@ def pass_one(alp):
 				label = getLabel(line)
 				if getLabel(line) in label_table:
 					print("[ERROR] multiple labels "+str(getLabel(line))+"at line "+str(line_no))
-					sys.exit(1)
+					# sys.exit(1)
+					# delAllFiles()
+				if getLabel(line) not in label_table:
+					label_table[getLabel(line)]=LC
+					f4.writelines(getLabel(line)+" "+str(LC)+"\n")
+					print(getLabel(line)+" "+str(LC)+"\n")
+			if hasSymbol(line) != False:
+				symbol = hasSymbol(line)
+				if hasSymbol(line) not in symbol_table:
+					symbol_table[hasSymbol(line)]=LC
+					f1.writelines(hasSymbol(line)+" "+str(LC)+"\n")
+					print(getLabel(line)+" "+str(LC)+"\n")
+			if getVariable(line) != False:
+				var = getVariable(line)
+				if var[0] in label_table:
+					print("[Error] Multiple Declaration of Variable "+var[0]+" at line "+str(line_no))
+					sys.exit(-1)
 					delAllFiles()
-				
-
-
-	return
+				if var[0] not in label_table:
+					try:
+						label_table[var[0]] = LC
+						f4.writelines(var[0]+" "+str(LC)+"\n")
+					except:
+						print("[Error] No inital value provided at Declaration of Variable "+str(getLabel(var[0]))+" at line "+str(line_no))
+						sys.exit(-1)
+						delAllFiles()
+			opcode = 0
 
 
 def getFile():
