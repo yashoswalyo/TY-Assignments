@@ -5,7 +5,7 @@ import sys
 
 MOT={
 'PRINT':['01',1],
-'STOP':['02',1],
+'STOP':['02',0],
 'ADD':['03',1],
 'SUB':['04',1],
 'MUL':['05',1],
@@ -19,14 +19,14 @@ MOT={
 'ORIGIN':['0D'],   #address of next ins
 'LTORG':['0F'],    #Assigns address to literals
 'DS':['10'],
-'DC':['11'],
-'AREG':['12'],
-'BREG':['13'],
-'CREG':['14'],
-'MREG':['15'],
-'JZ':['16'],
-'JNZ':['17'],
-'JC':['18'],
+'DC':['11',2],
+# 'AREG':['12'],
+# 'BREG':['13'],
+# 'CREG':['14'],
+# 'MREG':['15'],
+'JZ':['16',1],
+'JNZ':['17',1],
+'JC':['18',1],
 'JNC':['19']
 }
 
@@ -101,7 +101,7 @@ def delAllFiles():
 def hasVariable(line):
 	l = str(line)
 	tokens = l.split()
-	if "DW" in tokens:
+	if "DS" in tokens:
 		return True
 	else:
 		return False
@@ -121,15 +121,16 @@ def getOpcode(line):
 	temp = l.split()
 	Opcode = None
 	nOpcode = 0
-	if ":" in temp:
+	if ":" not in temp:
 		if temp[0] not in MOT and "DC" not in temp:
 			print("[Error] Invalid OPCODE Used" , end =' ')
 			return -2
-		elif temp[2] not in MOT:
-			print("[Error] Invalid OPCODE Used" , end =' ')
-			return -2
+	else:
+		if temp[2] not in MOT:
+				print("[Error] Invalid OPCODE Used" , end =' ')
+				return -2
 	for i in temp:
-		if i in MOT and nOpcode<0:
+		if i in MOT and nOpcode<1:
 			Opcode = i
 			nOpcode += 1
 	if nOpcode>1:
@@ -141,6 +142,7 @@ def getOperand(line):
 	l = str(line)
 	temp = l.split()
 	opc = 0
+	print(temp[-1])
 	error_flag=False
 	if ":" not in temp:
 		opc = temp[0]
@@ -150,8 +152,10 @@ def getOperand(line):
 		opc = temp[2]
 		if len(temp)>4:
 			error_flag = True
+
 	if "DC" in temp:
 		opc = temp[1]
+
 	if error_flag:
 		print("[Error] OPCODE "+str(temp[0]) +" Supplied with too many arguments thab required at Line" , end =' ')
 		return -2
@@ -167,7 +171,7 @@ def pass_one(alp):
 	LC=0
 	length = 20
 	value = 0
-	type = 'none'
+	type = None
 	f1 = open('tables/symbol_table.txt','a+')
 	f2 = open(file='tables/literal_table.txt',mode='a+')
 	f3 = open(file='tables/temp.txt',mode='a+')
@@ -191,33 +195,45 @@ def pass_one(alp):
 			if isEnd(line):
 				end_flag=False
 				break
+
 			if tok != False:
 				LC = int(tok)
+			
+			if tok == -1:
+				print("[Error] Start statement specifies an address that is beyond the memory limit of the system line "+str(line_no))
+				sys.exit(-1)
+				delAllFiles()
+
 			if isStart(line):
 				start_flag=False
 				continue
+
 			if getLabel(line) != False:
 				label = getLabel(line)
 				if getLabel(line) in label_table:
 					print("[ERROR] multiple labels "+str(getLabel(line))+"at line "+str(line_no))
-					# sys.exit(1)
-					# delAllFiles()
+					sys.exit(-1)
+					delAllFiles()
+
 				if getLabel(line) not in label_table:
 					label_table[getLabel(line)]=LC
 					f4.writelines(getLabel(line)+" "+str(LC)+"\n")
 					print(getLabel(line)+" "+str(LC)+"\n")
+
 			if hasSymbol(line) != False:
 				symbol = hasSymbol(line)
 				if hasSymbol(line) not in symbol_table:
 					symbol_table[hasSymbol(line)]=LC
 					f1.writelines(hasSymbol(line)+" "+str(LC)+"\n")
 					print(getLabel(line)+" "+str(LC)+"\n")
+
 			if getVariable(line) != False:
 				var = getVariable(line)
 				if var[0] in label_table:
 					print("[Error] Multiple Declaration of Variable "+var[0]+" at line "+str(line_no))
 					sys.exit(-1)
 					delAllFiles()
+
 				if var[0] not in label_table:
 					try:
 						label_table[var[0]] = LC
@@ -226,6 +242,7 @@ def pass_one(alp):
 						print("[Error] No inital value provided at Declaration of Variable "+str(getLabel(var[0]))+" at line "+str(line_no))
 						sys.exit(-1)
 						delAllFiles()
+
 			opcode = getOpcode(line)
 			if opcode==-2:
 				print("at line "+str(line_no))
@@ -233,12 +250,15 @@ def pass_one(alp):
 				delAllFiles()
 			if getOperand(line) == -2:
 				print("at line "+str(line_no))
-				sys.exit(1)
+				sys.exit(-1)
 				delAllFiles()
 			if "DS" in line:
-				f1.writelines(str(LC)+" "+line[0]+" "+opcode+" " +str(getOperand(line)+" \n"))
+				f3.writelines(str(LC)+" "+line[0]+" "+opcode+" " +str(getOperand(line)+" \n"))
 			else:
-				f1.writelines(str(LC)+ " " +opcode+ " " + "None" +"\n")
+				if getOperand(line) != False:
+					f3.writelines(str(LC)+ " " +opcode+ " " + str(getOperand(line)) +"\n")
+				else:
+					f3.writelines(str(LC)+ " " +opcode+ " " + "None" +"\n")
 			if not(isComment(line)):
 				if MOT[opcode][1]==0:
 					LC += 4
@@ -253,7 +273,19 @@ def pass_one(alp):
 		sys.exit(-1)
 		delAllFiles()
 	error_flag = False
-			
+	var_not_defined = []
+	for i in symbol_table:
+		if i not in label_table:
+			error_flag=True
+			var_not_defined.append(i)
+	for i in var_not_defined:
+		print("[Error] Symbol/Variable "+str(i)+" has been used but has not been defined...")
+	if error_flag:
+		sys.exit(-1)
+		delAllFiles()
+	f1.close()
+	f2.close()
+	f3.close()			
 
 def getFile():
 	fileName=input("Enter file name: ")
