@@ -1,33 +1,36 @@
 import os
 import sys
 # import iChecker
+MOTe={["START"]:["01",1]
 
-MOT=[
-['PRINT','01',1],
-['STOP','02',1],
-['ADD','03',1],
-['SUB','04',1],
-['MUL','05',1],
-['MOVER','06',1],
-['MOVEM','07',1],
-['DEC','08',1],
-['DIV','09',1],
-['READ','0A',1],
-['END','0B'],
-['START','0C'],
-['ORIGIN','0D'],   #address of next ins
-['LTORG','0F'],    #Assigns address to literals
-['DS','10'],
-['DC','11'],
-['AREG','12'],
-['BREG','13'],
-['CREG','14'],
-['MREG','15'],
-['JZ','16'],
-['JNZ','17'],
-['JC','18'],
-['JNC','19']
-]
+}
+
+MOT={
+['PRINT']:['01',1],
+['STOP']:['02',1],
+['ADD']:['03',1],
+['SUB']:['04',1],
+['MUL']:['05',1],
+['MOVER']:['06',1],
+['MOVEM']:['07',1],
+['DEC']:['08',1],
+['DIV']:['09',1],
+['READ']:['0A',1],
+['END']:['0B'],
+['START']:['0C'],
+['ORIGIN']:['0D'],   #address of next ins
+['LTORG']:['0F'],    #Assigns address to literals
+['DS']:['10'],
+['DC']:['11'],
+['AREG']:['12'],
+['BREG']:['13'],
+['CREG']:['14'],
+['MREG']:['15'],
+['JZ']:['16'],
+['JNZ']:['17'],
+['JC']:['18'],
+['JNC']:['19']
+}
 
 def isComment(line):
 	if line.find("//"):
@@ -53,10 +56,49 @@ def getStart(line):
 	
 def isEnd(line):
 	l=str(line)
-	l=l.split()
-	for "END" in l:
+	token=l.split()
+	if "END" in token:
 		return True
 	return False
+
+def getLabel(line):
+	l=str(line)
+	label = False
+	l = l.split()
+	if hasLabel(line):
+		return hasSymbol(line)
+	else:
+		return False
+
+def hasLabel(line):
+	if line.find(":")!=1:
+		return True
+	else:
+		return False
+
+
+def RepresentsInt(s):
+	try: 
+		int(s)
+		return True
+	except ValueError:
+		return False
+
+def hasSymbol(line):
+	l=str(line)
+	l=l.split()
+	symbol = False
+	for i in l:
+		if i not in list(MOT.keys()) and not (RepresentsInt(i)):
+			symbol=i
+		break
+	return symbol
+
+def delAllFiles():
+	os.remove("temp.txt")
+	os.remove("label_table.txt")
+	os.remove("tables/symbol_table.txt")
+	os.remove("output.txt")
 
 def pass_one(alp):
 	LC=0
@@ -83,6 +125,17 @@ def pass_one(alp):
 			if isEnd(line):
 				end_flag=False
 				break
+			if tok != False:
+				LC = int(tok)
+			if isStart(line):
+				start_flag=False
+				continue
+			if getLabel(line) != False:
+				label = getLabel(line)
+				if getLabel(line) in label_table:
+					print("[ERROR] multiple labels "+str(getLabel(line))+"at line "+str(line_no))
+					sys.exit(1)
+					delAllFiles()
 
 
 	return
