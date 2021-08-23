@@ -1,7 +1,6 @@
-from io import open_code
 import os
 import sys
-# import iChecker
+#import iChecker
 
 
 MOT={
@@ -245,14 +244,17 @@ def pass_one(alp):
 						delAllFiles()
 
 			opcode = getOpcode(line)
+
 			if opcode==-2:
 				print("at line "+str(line_no))
 				sys.exit(-1)
 				delAllFiles()
+
 			if getOperand(line) == -2:
 				print("at line "+str(line_no))
 				sys.exit(-1)
 				delAllFiles()
+
 			if "DS" in line:
 				f3.writelines(str(LC)+" "+line[0]+" "+opcode+" " +str(getOperand(line)+" \n"))
 			else:
@@ -260,33 +262,40 @@ def pass_one(alp):
 					f3.writelines(str(LC)+ " " +opcode+ " " + str(getOperand(line)) +"\n")
 				else:
 					f3.writelines(str(LC)+ " " +opcode+ " " + "None" +"\n")
+
 			if not(isComment(line)):
 				if MOT[opcode][1]==0:
 					LC += 4
 				else:
 					LC += 12
+
 	if end_flag:
 		print("[Error] Missing END statement...")
 		sys.exit(-1)
 		delAllFiles()
+
 	if start_flag:
 		print("[Error] Missing START statement...")
 		sys.exit(-1)
 		delAllFiles()
+
 	error_flag = False
 	var_not_defined = []
 	for i in symbol_table:
 		if i not in label_table:
 			error_flag=True
 			var_not_defined.append(i)
+
 	for i in var_not_defined:
 		print("[Error] Symbol/Variable "+str(i)+" has been used but has not been defined...")
+
 	if error_flag:
 		sys.exit(-1)
 		delAllFiles()
 	f1.close()
 	f2.close()
-	f3.close()			
+	f3.close()
+	f4.close()
 
 def getFile():
 	fileName=input("Enter file name: ")
