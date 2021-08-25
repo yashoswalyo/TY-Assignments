@@ -109,10 +109,14 @@ def RepresentsInt(s):
 		return False
 
 def delAllFiles():
-	os.remove("tables/temp.txt")
-	os.remove("tables/label_table.txt")
-	os.remove("tables/symbol_table.txt")
-	# os.remove("output.txt") 
+	try:
+		os.remove("tables/temp.txt")
+		os.remove("tables/label_table.txt")
+		os.remove("tables/symbol_table.txt")
+		# os.remove("output.txt")
+	except:
+		print("no files found")
+		return
 
 def hasVariable(line):
 	l = str(line)
