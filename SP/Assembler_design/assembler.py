@@ -191,6 +191,7 @@ def pass_one(alp):
 	LC=0
 	length = 20
 	l_index = 1
+	s_index = 1
 	type = None
 	f1 = open('tables/symbol_table.txt','a+')
 	f2 = open(file='tables/literal_table.txt',mode='a+')
@@ -242,9 +243,10 @@ def pass_one(alp):
 			if hasSymbol(line) != False:
 				symbol = hasSymbol(line)
 				if hasSymbol(line) not in symbol_table:
-					symbol_table[hasSymbol(line)]=LC
-					f1.writelines(hasSymbol(line)+" "+str(LC)+"\n")
-					print(getLabel(line)+" "+str(LC)+"\n")
+					symbol_table[symbol]=LC
+					f1.writelines(str(s_index) + ". " +symbol+" "+str(LC)+"\n")
+					s_index += 1
+
 
 			if getVariable(line) != False:
 				var = getVariable(line)
