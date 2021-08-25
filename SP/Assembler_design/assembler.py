@@ -110,6 +110,7 @@ def RepresentsInt(s):
 
 def delAllFiles():
 	os.remove("tables/temp.txt")
+	os.remove("tables/label_table.txt")
 	os.remove("tables/symbol_table.txt")
 	# os.remove("output.txt") 
 
@@ -185,7 +186,7 @@ def getOperand(line):
 def pass_one(alp):
 	LC=0
 	length = 20
-	value = 0
+	l_index = 1
 	type = None
 	f1 = open('tables/symbol_table.txt','a+')
 	f2 = open(file='tables/literal_table.txt',mode='a+')
@@ -228,8 +229,8 @@ def pass_one(alp):
 
 				if getLabel(line) not in label_table:
 					label_table[getLabel(line)]=LC
-					f4.writelines(getLabel(line)+" "+str(LC)+"\n")
-					print(getLabel(line)+" "+str(LC)+"\n")
+					f4.writelines(str(l_index)+". "+getLabel(line)+" "+str(LC)+"\n")
+					l_index += 1
 
 			if isOrigin(line) != False:
 				LC = getOrigin(line)
@@ -318,8 +319,7 @@ def getFile():
 if __name__=='__main__':
 	alp=getFile()
 	# iChecker.main()
-	pass_one(alp)
 	delete = input("delete table files Y/N: ")
 	if delete == 'y' or delete == 'Y':
 		delAllFiles()
-	else: exit(-1)
+	pass_one(alp)
