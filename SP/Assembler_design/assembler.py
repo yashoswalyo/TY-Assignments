@@ -14,9 +14,10 @@ MOT={
 'DEC':['08',1],
 'DIV':['09',1],
 'READ':['0A',1],
+'BC':['20',3],
 'END':['0B',-1],
 'START':['0C',-1],
-'ORIGIN':['0D'],   #address of next ins
+'ORIGIN':['0D'],   #address of next inst.     # not imlemented
 'LTORG':['0F'],    #Assigns address to literals
 'DS':['10'],
 'DC':['11',2],
@@ -24,10 +25,11 @@ MOT={
 # 'BREG':['13'],
 # 'CREG':['14'],
 # 'MREG':['15'],
-'JZ':['16',1],
-'JNZ':['17',1],
-'JC':['18',1],
-'JNC':['19']
+'EZ':['16',1],
+'LT':['17',1],
+'GT':['18',1],
+'LE':['19',1],
+'GE':['2A',1]
 }
 
 def isComment(line):
@@ -45,6 +47,7 @@ def isStart(line):
 def getStart(line):
 	l = str(line)
 	tokens = l.split()
+	print(tokens)
 	if "START" in tokens and len(tokens)==2:
 		return tokens[1]
 	elif "START" in tokens and len(tokens)!=2:
