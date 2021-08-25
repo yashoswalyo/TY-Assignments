@@ -93,9 +93,9 @@ def getOrigin(line):
 
 def hasSymbol(line):
 	l=str(line)
-	l=l.split()
+	temp = l.split()
 	symbol = False
-	for i in l:
+	for i in temp:
 		if i not in list(MOT.keys()) and not (RepresentsInt(i)):
 			symbol=i
 		break
