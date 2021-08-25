@@ -17,7 +17,7 @@ MOT={
 'BC':['20',3],
 'END':['0B',-1],
 'START':['0C',-1],
-'ORIGIN':['0D'],   #address of next inst.     # not imlemented
+ 'ORIGIN':['0D',1],   #address of next inst.     # not imlemented
 'LTORG':['0F'],    #Assigns address to literals
 'DS':['10'],
 'DC':['11',2],
@@ -34,13 +34,6 @@ MOT={
 
 def isComment(line):
 	if line.find("//")!=-1:
-		return True
-	return False
-
-def isStart(line):
-	l = str(line)
-	l = l.split()
-	if "START" in l:
 		return True
 	return False
 
@@ -62,6 +55,13 @@ def isEnd(line):
 		return True
 	return False
 
+def isStart(line):
+	l = str(line)
+	l = l.split()
+	if "START" in l:
+		return True
+	return False
+
 def getLabel(line):
 	l=str(line)
 	label = False
@@ -77,13 +77,19 @@ def hasLabel(line):
 	else:
 		return False
 
-
-def RepresentsInt(s):
-	try: 
-		int(s)
+def isOrigin(line):
+	l = str(line)
+	l = l.split()
+	if 'ORIGIN' in l:
 		return True
-	except ValueError:
-		return False
+	return False
+
+def getOrigin(line):
+	l = str(line)
+	temp = l.split()
+	if 'ORIGIN' in temp:
+		return int(temp[1])
+	return False
 
 def hasSymbol(line):
 	l=str(line)
@@ -95,11 +101,17 @@ def hasSymbol(line):
 		break
 	return symbol
 
+def RepresentsInt(s):
+	try: 
+		int(s)
+		return True
+	except ValueError:
+		return False
+
 def delAllFiles():
-	os.remove("temp.txt")
-	os.remove("label_table.txt")
+	os.remove("tables/temp.txt")
 	os.remove("tables/symbol_table.txt")
-	os.remove("output.txt")
+	# os.remove("output.txt") 
 
 def hasVariable(line):
 	l = str(line)
@@ -187,25 +199,21 @@ def pass_one(alp):
 	line_no=0
 	print("Initializing Part 1 assembler")
 	for line in alp:
+		line_no+=1
 		print(line_no)
 		line.strip()
 		k = line.split()
 		if not(isComment(line)):
-			line_no+=1
 			label = 0
 			symbol = 0
 			tok = getStart(line)
+
 			if isEnd(line):
 				end_flag=False
 				break
 
 			if tok != False:
 				LC = int(tok)
-			
-			if tok == -1:
-				print("[Error] Start statement specifies an address that is beyond the memory limit of the system line "+str(line_no))
-				sys.exit(-1)
-				delAllFiles()
 
 			if isStart(line):
 				start_flag=False
@@ -222,6 +230,9 @@ def pass_one(alp):
 					label_table[getLabel(line)]=LC
 					f4.writelines(getLabel(line)+" "+str(LC)+"\n")
 					print(getLabel(line)+" "+str(LC)+"\n")
+
+			if isOrigin(line) != False:
+				LC = getOrigin(line)
 
 			if hasSymbol(line) != False:
 				symbol = hasSymbol(line)
@@ -240,7 +251,7 @@ def pass_one(alp):
 				if var[0] not in label_table:
 					try:
 						label_table[var[0]] = LC
-						f4.writelines(var[0]+" "+str(LC)+"\n")
+						f1.writelines(var[0]+" "+str(LC)+"\n")
 					except:
 						print("[Error] No inital value provided at Declaration of Variable "+str(getLabel(var[0]))+" at line "+str(line_no))
 						sys.exit(-1)
@@ -268,9 +279,9 @@ def pass_one(alp):
 
 			if not(isComment(line)):
 				if MOT[opcode][1]==0:
-					LC += 4
+					LC += 1
 				else:
-					LC += 12
+					LC += 2
 
 	if end_flag:
 		print("[Error] Missing END statement...")
@@ -298,7 +309,6 @@ def pass_one(alp):
 	f1.close()
 	f2.close()
 	f3.close()
-	f4.close()
 
 def getFile():
 	fileName=input("Enter file name: ")
@@ -309,3 +319,7 @@ if __name__=='__main__':
 	alp=getFile()
 	# iChecker.main()
 	pass_one(alp)
+	delete = input("delete table files Y/N: ")
+	if delete == 'y' or delete == 'Y':
+		delAllFiles()
+	else: exit(-1)
