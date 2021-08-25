@@ -118,23 +118,21 @@ def delAllFiles():
 		print("no files found")
 		return
 
-def hasVariable(line):
-	l = str(line)
-	tokens = l.split()
-	if "DS" in tokens:
-		return True
-	else:
-		return False
-
-
 def getVariable(line):
 	l = str(line)
-	tokens = l.split()
+	temp = l.split()
 	if hasVariable(line):
-		return [tokens[0],tokens[2]]
+		return [temp[0],temp[2]]
 	else:
 		return False	
 
+def hasVariable(line):
+	l = str(line)
+	tokens = l.split()
+	if "DC" in tokens:
+		return True
+	else:
+		return False
 
 def getOpcode(line):
 	l = str(line)
@@ -199,6 +197,7 @@ def pass_one(alp):
 	f4 = open(file='tables/label_table.txt',mode='a+')
 	label_table={}
 	symbol_table={}
+	var_table={}
 	end_flag = True
 	start_flag = True
 	tok = 0
@@ -250,14 +249,14 @@ def pass_one(alp):
 
 			if getVariable(line) != False:
 				var = getVariable(line)
-				if var[0] in label_table:
+				if var[0] in var_table:
 					print("[Error] Multiple Declaration of Variable "+var[0]+" at line "+str(line_no))
 					sys.exit(-1)
 					delAllFiles()
 
-				if var[0] not in label_table:
+				if var[0] not in var_table:
 					try:
-						label_table[var[0]] = LC
+						var_table[var[0]] = LC
 						f1.writelines(var[0]+" "+str(LC)+"\n")
 					except:
 						print("[Error] No inital value provided at Declaration of Variable "+str(getLabel(var[0]))+" at line "+str(line_no))
