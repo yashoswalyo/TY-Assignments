@@ -257,7 +257,7 @@ def pass_one(alp):
 				if var[0] not in var_table:
 					try:
 						var_table[var[0]] = LC
-						f1.writelines(var[0]+" "+str(LC)+"\n")
+						f4.writelines(var[0]+" "+str(LC)+"\n")
 					except:
 						print("[Error] No inital value provided at Declaration of Variable "+str(getLabel(var[0]))+" at line "+str(line_no))
 						sys.exit(-1)
