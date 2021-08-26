@@ -17,7 +17,7 @@ MOT={
 'BC':['20',3],
 'END':['0B',-1],
 'START':['0C',-1],
- 'ORIGIN':['0D',1],   #address of next inst.     # not imlemented
+'ORIGIN':['0D',1],   #address of next inst.     # not imlemented
 'LTORG':['0F'],    #Assigns address to literals
 'DS':['10'],
 'DC':['11',2],
@@ -275,8 +275,8 @@ def pass_one(alp):
 				sys.exit(-1)
 				delAllFiles()
 
-			if "DS" in line:
-				f3.writelines(str(LC)+" "+line[0]+" "+opcode+" " +str(getOperand(line)+" \n"))
+			if "DC" in line:
+				f3.writelines(str(LC)+" "+line[0]+" "+opcode+" "+str(getOperand(line)+"\n"))
 			else:
 				if getOperand(line) != False:
 					f3.writelines(str(LC)+ " " +opcode+ " " + str(getOperand(line)) +"\n")
