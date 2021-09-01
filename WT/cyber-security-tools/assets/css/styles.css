@@ -1,17 +1,12 @@
-*{
+@font-face {
     font-family: roboto;
+    src: url('../fonts/Roboto-Regular.ttf');
+}
+
+body{
     background-color: teal;
+    font-family: roboto;
 }
-
-header.main{
-    height: 15vw;
-    background-color: rgba(0, 0, 0, 0.884);
-    border-radius: 5px;
-}
-
-p.title{
-    color: white;
-    font-size:xx-large;
-    margin-top: auto;
-    background-color: black;
+h1.home-header{
+    font-weight: 800;
 }
