@@ -1,0 +1,17 @@
+*{
+    font-family: roboto;
+    background-color: teal;
+}
+
+header.main{
+    height: 15vw;
+    background-color: rgba(0, 0, 0, 0.884);
+    border-radius: 5px;
+}
+
+p.title{
+    color: white;
+    font-size:xx-large;
+    margin-top: auto;
+    background-color: black;
+}
