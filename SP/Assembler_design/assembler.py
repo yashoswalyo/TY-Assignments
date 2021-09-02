@@ -315,6 +315,56 @@ def pass_one(alp):
 	f1.close()
 	f2.close()
 	f3.close()
+	pass_two(symbol_table,label_table)
+
+def pass_two(SYMTAB,LABTAB):
+
+	"""
+	Working of Pass Two:
+	1.	Since the assembler runs this pass only if all the symbols, labels and opcodes have been declared the code can directly processed.
+	2.	The Temporary file created during the first pass, is now processed line by line
+	3.	The labels and variables are replaced by their corresponding addresses
+	4.	The opcodes and the addresses are converted to their binary equivalents and all changes are written off to output.out
+	5.	Clean-Up is done, removing all temporary files and symbol and label tables.
+
+	"""
+	try:
+		symtable = open('prog.asm')
+		labtable = open('prog.asm')
+		temp = open("tables/temp.txt")
+	except:
+		print("Problem in Assembly...")
+		sys.exit(0)
+	byteCode = None
+	LOC = 0
+	linebyline = temp.readlines()
+	final = open("output.out", "a+")
+	for i in linebyline:
+		line = i.split()
+		addr = line[0]
+		operand = None
+		try:
+			opc = MOT[line[1]][0]
+		except:
+			opc = MOT[line[2]][0] 
+		if opc=="1101":
+			opc = binary(line[3])
+		else:
+			if line[2] in LABTAB:
+				operand = LABTAB[line[2]]
+				operand = binary(operand)
+			elif MOT[line[1]][1]==1 and line[2] not in LABTAB:
+				operand = binary(int(line[2]))
+		l=binary(int(addr))
+		if operand != None:
+			final.writelines(l[-8:]+" : "+str(opc)+" "+str(operand)+"\n")
+		else:
+			final.writelines(l[-8:]+" : "+str(opc)+"\n")
+	final.close()
+
+def binary(n):
+	n = int(n)
+	return '{0:08b}'.format(n)
 
 def getFile():
 	fileName=input("Enter file name: ")

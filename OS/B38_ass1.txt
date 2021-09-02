@@ -7,8 +7,8 @@
 7. mv mydate mydir/
 8. cd mydir;cp mydate ourdate
 9. ls
-10. ls -l //(-rw-rw-r-- 1 yashoswal yashoswal 6444 Aug 19 13:09 ourdate)
-11. pwd //(/home/yashoswal/Documents/TY-Assignments/OS/mydir)
+10. ls -l
+11. pwd 
 12. mv * /home/yashoswal/
 13. cd ;ls
 14. head -5 mydate
@@ -19,8 +19,13 @@
 19. cat capitals2 >> capitals
 20. wc -l < capitals
 21. chmod 666 capitals
-22. chmod 466 capitals //(error writing file: permission denied)
+22. chmod 466 capitals
 23. alias concat='cat capitals1 capitals2 capitals3 > capitals'
-24. 	$PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
-	$HOME="/home/yashoswal"
-	$TERM="xterm-256color"
+24. $PATH;$HOME;$TERM
+25. grep the -o mydate | wc -w
+26. grep date -n mydate
+27. grep i -i -v mydate
+28. grep -f monotonic /usr/dict/words
+29. paste mystates mycapitals > states-capitals.txt
+30. cut -d : --complement -f2,4- /etc/passwd
+31. who | tee > log.txt
