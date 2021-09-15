@@ -1,112 +1,50 @@
+from io import TextIOWrapper
 import os
 import sys
-#import iChecker
-
 
 MOT={
-'PRINT':['01',1],
-'STOP':['02',0],
-'ADD':['03',1],
-'SUB':['04',1],
-'MUL':['05',1],
-'MOVER':['06',1],
-'MOVEM':['07',1],
-'DEC':['08',1],
-'DIV':['09',1],
-'READ':['0A',1],
-'BC':['20',3],
-'END':['0B',-1],
-'START':['0C',-1],
-'ORIGIN':['0D',1],   #address of next inst.     # not imlemented
-'LTORG':['0F'],    #Assigns address to literals
-'DS':['10'],
-'DC':['11',2],
-# 'AREG':['12'],
-# 'BREG':['13'],
-# 'CREG':['14'],
-# 'MREG':['15'],
-'EZ':['16',1],
-'LT':['17',1],
-'GT':['18',1],
-'LE':['19',1],
-'GE':['2A',1]
+	'STOP':('00','IS',0),
+	'ADD':('01','IS',2),
+	'SUB':('02','IS',2),
+	'MUL':('03','IS',2),
+	'MOVER':('04','IS',2),
+	'MOVEM':('05','IS',2),
+	'COMP':('06','IS',2),
+	'BC':('07','IS',2),
+	'DIV':('08','IS',2),
+	'READ':('09','IS',1),
+	'PRINT':('10','IS',1),
+	'LTORG':('05','AD',0),
+	'ORIGIN':('03','AD',1),
+	'START':('01','AD',1),
+	'EQU':('04','AD',2),
+	'DS':('01','DL',1),
+	'DC':('02','DL',1),
+	'END':('AD',0)
 }
 
-def isComment(line):
-	if line.find("//")!=-1:
-		return True
-	return False
+REG={
+	'AREG':1,
+	'BREG':2,
+	'CREG':3,
+	'DREG':4
+}
 
-def getStart(line):
-	l = str(line)
-	tokens = l.split()
-	print(tokens)
-	if "START" in tokens and len(tokens)==2:
-		return tokens[1]
-	elif "START" in tokens and len(tokens)!=2:
-		return 0
-	else:
-		return False
-	
-def isEnd(line):
-	l=str(line)
-	token=l.split()
-	if "END" in token:
-		return True
-	return False
+#handles END directive		
 
-def isStart(line):
-	l = str(line)
-	l = l.split()
-	if "START" in l:
-		return True
-	return False
+class vars():
+	LC=0
+	ifp=open("tables/inter_code.txt",mode="a")
+	ifp.truncate(0)
+	lit=open("tables/literal_table.txt","a+")    #vars.literals and their address containing file
+	lit.truncate(0)
+	tmp=open("tables/temp.txt","a+")
+	tmp.truncate(0)
+	symtab={}   #Sybol Table
+	pooltab=[]	#Pool Table
+	words=[]
+	symindex=0
 
-def getLabel(line):
-	l=str(line)
-	label = False
-	l = l.split()
-	if hasLabel(line):
-		return hasSymbol(line)
-	else:
-		return False
-
-def hasLabel(line):
-	if line.find(":")!=1:
-		return True
-	else:
-		return False
-
-def isOrigin(line):
-	l = str(line)
-	l = l.split()
-	if 'ORIGIN' in l:
-		return True
-	return False
-
-def getOrigin(line):
-	l = str(line)
-	temp = l.split()
-	if 'ORIGIN' in temp:
-		return int(temp[1])
-	return False
-
-def hasSymbol(line):
-	l=str(line)
-	temp = l.split()
-	symbol = False
-	for i in temp:
-		if i not in list(MOT.keys()) and not (RepresentsInt(i)):
-			symbol=i
-		break
-	return symbol
-
-def RepresentsInt(s):
-	try: 
-		int(s)
-		return True
-	except ValueError:
-		return False
 
 def delAllFiles():
 	try:
@@ -118,204 +56,201 @@ def delAllFiles():
 		print("no files found")
 		return
 
-def getVariable(line):
-	l = str(line)
-	temp = l.split()
-	if hasVariable(line):
-		return [temp[0],temp[2]]
-	else:
-		return False	
+#prints literal table
+def littab():
+	print("literal table:")
+	vars.lit.seek(0,0)
+	for x in vars.lit:
+		print(x)
 
-def hasVariable(line):
-	l = str(line)
-	tokens = l.split()
-	if "DC" in tokens:
-		return True
-	else:
-		return False
+#prints pool table
+def pooltab2():
+	global pooltab
+	print("Pool Table:")
+	print(vars.pooltab)
 
-def getOpcode(line):
-	l = str(line)
-	temp = l.split()
-	Opcode = None
-	nOpcode = 0
-	if ":" not in temp:
-		if temp[0] not in MOT and "DC" not in temp:
-			print("[Error] Invalid OPCODE Used" , end =' ')
-			return -2
-	else:
-		if temp[2] not in MOT:
-				print("[Error] Invalid OPCODE Used" , end =' ')
-				return -2
-	for i in temp:
-		if i in MOT and nOpcode<1:
-			Opcode = i
-			nOpcode += 1
-	if nOpcode>1:
-		raise Exception("One of the Lines contains multiple OPCODES...")
-	else:
-		return Opcode
+#prints symbol table
+def symbol():
+	global symtab
+	print("Symbol Table:")
+	print(vars.symtab)
 
-def getOperand(line):
-	l = str(line)
-	temp = l.split()
-	opc = 0
-	print(temp[-1])
-	error_flag=False
-	if ":" not in temp:
-		opc = temp[0]
-		if len(temp)>4:
-			error_flag = True
-	else:
-		opc = temp[2]
-		if len(temp)>4:
-			error_flag = True
+#handles END directive
+def END():
+	pool=0
+	z=0
+	vars.ifp.write("\t(AD,02)\n")
+	vars.lit.seek(0,0)
+	for x in vars.lit:
+		if "**" in x:
+			pool+=1
+			if pool==1:
+				vars.pooltab.append(z)
+			y=x.split()
+			vars.tmp.write(y[0]+"\t"+str(vars.LC)+"\n")
+			vars.LC+=1
+		else:
+			vars.tmp.write(x)
+		z+=1
+	vars.lit.truncate(0)
+	vars.tmp.seek(0,0)
+	for x in vars.tmp:
+		vars.lit.write(x)
+	vars.tmp.truncate(0)
 
-	if "DC" in temp:
-		opc = temp[1]
-
-	if error_flag:
-		print("[Error] OPCODE "+str(temp[0]) +" Supplied with too many arguments thab required at Line" , end =' ')
-		return -2
-	if MOT[opc][1] == 1 and temp[-1] in MOT:
-		print("[Error] OPCODE "+str(temp[-1]) +" Supplied with fewer arguments thab required at Line" , end =' ')
-		return -2
-	if temp[-1] not in MOT:
-		return temp[-1]
-	else:
-		return False
-
-def pass_one(alp):
-	LC=0
-	length = 20
-	l_index = 1
-	s_index = 1
-	type = None
-	f1 = open('tables/symbol_table.txt','a+')
-	f2 = open(file='tables/literal_table.txt',mode='a+')
-	f3 = open(file='tables/temp.txt',mode='a+')
-	f4 = open(file='tables/label_table.txt',mode='a+')
-	label_table={}
-	symbol_table={}
-	var_table={}
-	end_flag = True
-	start_flag = True
-	tok = 0
-	line_no=0
-	print("Initializing Part 1 assembler")
-	for line in alp:
-		line_no+=1
-		print(line_no)
-		line.strip()
-		k = line.split()
-		if not(isComment(line)):
-			label = 0
-			symbol = 0
-			tok = getStart(line)
-
-			if isEnd(line):
-				end_flag=False
-				break
-
-			if tok != False:
-				LC = int(tok)
-
-			if isStart(line):
-				start_flag=False
-				continue
-
-			if getLabel(line) != False:
-				label = getLabel(line)
-				if getLabel(line) in label_table:
-					print("[ERROR] multiple labels "+str(getLabel(line))+"at line "+str(line_no))
-					sys.exit(-1)
-					delAllFiles()
-
-				if getLabel(line) not in label_table:
-					label_table[getLabel(line)]=LC
-					f4.writelines(str(l_index)+". "+getLabel(line)+" "+str(LC)+"\n")
-					l_index += 1
-
-			if isOrigin(line) != False:
-				LC = getOrigin(line)
-
-			if hasSymbol(line) != False:
-				symbol = hasSymbol(line)
-				if hasSymbol(line) not in symbol_table:
-					symbol_table[symbol]=LC
-					f1.writelines(str(s_index) + ". " +symbol+" "+str(LC)+"\n")
-					s_index += 1
-
-
-			if getVariable(line) != False:
-				var = getVariable(line)
-				if var[0] in var_table:
-					print("[Error] Multiple Declaration of Variable "+var[0]+" at line "+str(line_no))
-					sys.exit(-1)
-					delAllFiles()
-
-				if var[0] not in var_table:
-					try:
-						var_table[var[0]] = LC
-						f4.writelines(var[0]+" "+str(LC)+"\n")
-					except:
-						print("[Error] No inital value provided at Declaration of Variable "+str(getLabel(var[0]))+" at line "+str(line_no))
-						sys.exit(-1)
-						delAllFiles()
-
-			opcode = getOpcode(line)
-
-			if opcode==-2:
-				print("at line "+str(line_no))
-				sys.exit(-1)
-				delAllFiles()
-
-			if getOperand(line) == -2:
-				print("at line "+str(line_no))
-				sys.exit(-1)
-				delAllFiles()
-
-			if "DC" in line:
-				f3.writelines(str(LC)+" "+line[0]+" "+opcode+" "+str(getOperand(line)+"\n"))
+#handles LTORG mnemonic
+def LTORG():
+	pool=0
+	z=0
+	vars.lit.seek(0,0)
+	x=vars.lit.readlines()
+	i=0
+	while(i<len(x)):
+		f=[]
+		if("**" in x[i]):
+			j=0
+			pool+=1
+			if pool==1:
+				vars.pooltab.append(z)
+			while(x[i][j]!="'"):
+				j+=1
+			j+=1
+			while(x[i][j]!="'"):
+				f.append(x[i][j])
+				j+=1
+			if(i!=len(x)-1):
+				vars.ifp.write("\t(AD,05)\t(DL,02)(C,"+str(f[0])+")\n")
+				y=x[i].split()
+				vars.tmp.write(y[0]+"\t"+str(vars.LC)+"\n")
+				vars.LC+=1
+				vars.ifp.write(str(vars.LC))
 			else:
-				if getOperand(line) != False:
-					f3.writelines(str(LC)+ " " +opcode+ " " + str(getOperand(line)) +"\n")
+				vars.ifp.write("\t(AD,05)\t(DL,02)(C,"+str(f[0])+")\n")
+				y=x[i].split()
+				vars.tmp.write(y[0]+"\t"+str(vars.LC)+"\n")
+				vars.LC+=1
+		else:
+			vars.tmp.write(x[i])
+		z+=1
+		i+=1
+	vars.lit.truncate(0)
+	vars.tmp.seek(0,0)
+	for x in vars.tmp:
+		vars.lit.write(x)
+	vars.tmp.truncate(0)
+
+#handles ORIGIN mnemonic
+def ORIGIN(addr):
+	vars.ifp.write("\t(AD,03)\t(C,"+str(addr)+")\n")
+	vars.LC =int(addr)
+
+#handles DS mnemonic
+def DS(size):
+	vars.ifp.write("\t(DL,01)\t(C,"+size+")\n")
+	vars.LC=vars.LC+int(size)
+
+#handles DC mnemonic
+def DC(value):
+	vars.ifp.write("\t(DL,02)\t(C,"+value+")\n")
+	vars.LC+=1
+
+ #identifies type of operands i.e. registers, literals, symbols and add approprite data in intermediate code file, literal table and symbol table as well as pool table.   
+def OTHERS(mnemonic,k):
+	z=MOT[mnemonic]
+	vars.ifp.write("\t("+z[1]+","+z[0]+")\t")
+	i=0
+	y=z[-1]
+	#print("y="+str(y))
+	for i in range(1,y+1):
+		vars.words[k+i]=vars.words[k+i].replace(",","")
+		if(vars.words[k+i] in REG.keys()):
+			vars.ifp.write("(RG,"+str(REG[vars.words[k+i]])+")")
+		elif("=" in vars.words[k+i]):
+			#print(vars.words[k+i])
+			vars.lit.seek(0,2)
+			vars.lit.write(vars.words[k+i]+"\t**\n")
+			vars.lit.seek(0,0)
+			x=vars.lit.readlines()
+			#print(len(x))
+			vars.ifp.write("(L,"+str(len(x))+")")
+		else:
+			#print(vars.words,symtab)
+			if(vars.words[k+i] not in vars.symtab.keys()):
+				vars.symtab[vars.words[k+i]]=("**",vars.symindex)
+				vars.ifp.write("(S,"+str(vars.symindex)+")")
+				vars.symindex+=1
+			else:
+				w=vars.symtab[vars.words[k+i]]
+				vars.ifp.write("(S,"+str(w[-1])+")")
+	#print(vars.symtab)
+	vars.ifp.write("\n")
+	vars.LC+=1
+ 
+ #idenifies mnemonic and redirect to resepective function	
+def detect_mn(k):
+	if(vars.words[k]=="START"):
+		vars.LC=int(vars.words[1])
+		vars.ifp.write("\t(AD,01)\t(C,"+str(vars.LC)+')\n')
+	elif(vars.words[k]=='END'):
+		END()
+	elif(vars.words[k]=="LTORG"):
+	   LTORG()
+	elif(vars.words[k]=="ORIGIN"):
+	   ORIGIN(vars.words[k+1])
+	elif(vars.words[k]=="DS"):
+		DS(vars.words[k+1])
+	elif(vars.words[k]=="DC"):
+		DC(vars.words[k+1])
+	#elif(vars.words[k]=="EQU"):
+		#EQU(vars.words)
+	else:
+		OTHERS(vars.words[k],k)
+	littab()
+	pooltab2()
+	symbol()
+
+
+def pass_one(alp:TextIOWrapper):
+	for line in alp:
+			vars.words=line.split()
+			if (vars.LC>0):
+				vars.ifp.write(str(vars.LC))
+			print("LC: ",vars.LC)
+			print(line)
+			print(vars.words)
+			k=0
+			if vars.words[0] in MOT.keys():
+				print("Mnemonic: ",vars.words[0])
+				val = MOT[vars.words[0]]
+				detect_mn(k)
+			else:
+				print("Label: ",vars.words[0],"Mnemonic:",vars.words[1])
+				if vars.words[k] not in vars.symtab.keys():
+					vars.symtab[vars.words[k]]=(vars.LC,vars.symindex)
+					#ifp.write("\t(S,"+str(symindex)+")\t")	
+					vars.symindex+=1
+					symbol() 
 				else:
-					f3.writelines(str(LC)+ " " +opcode+ " " + "None" +"\n")
-
-			if not(isComment(line)):
-				if MOT[opcode][1]==0:
-					LC += 1
-				else:
-					LC += 2
-
-	if end_flag:
-		print("[Error] Missing END statement...")
-		sys.exit(-1)
-		delAllFiles()
-
-	if start_flag:
-		print("[Error] Missing START statement...")
-		sys.exit(-1)
-		delAllFiles()
-
-	error_flag = False
-	var_not_defined = []
-	for i in symbol_table:
-		if i not in label_table:
-			error_flag=True
-			var_not_defined.append(i)
-
-	for i in var_not_defined:
-		print("[Error] Symbol/Variable "+str(i)+" has been used but has not been defined...")
-
-	if error_flag:
-		sys.exit(-1)
-		delAllFiles()
-	f1.close()
-	f2.close()
-	f3.close()
-
+					x = vars.symtab[vars.words[k]]
+					if x[0] == "**":
+						print("yes")
+						vars.symtab[vars.words[k]] = (vars.LC,x[1])
+					symbol()
+				k=1
+				detect_mn(k)
+	vars.ifp.close()
+	vars.lit.close()
+	vars.tmp.close()
+	sym=open("tables/symbol_table.txt","a+")
+	sym.truncate(0)
+	for x in vars.symtab:
+		sym.write(x+"\t"+str(vars.symtab[x][0])+"\n")
+	sym.close()
+	pool=open("tables/pool_table.txt","a+")
+	pool.truncate(0)
+	for x in vars.pooltab:
+		pool.write(str(x)+"\n")
+	pool.close()
 
 
 def getFile():
@@ -330,3 +265,5 @@ if __name__=='__main__':
 	if delete == 'y' or delete == 'Y':
 		delAllFiles()
 	pass_one(alp)
+
+	
