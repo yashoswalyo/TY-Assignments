@@ -14,13 +14,15 @@ MOT={
 	'DIV':('08','IS',2),
 	'READ':('09','IS',1),
 	'PRINT':('10','IS',1),
-	'LTORG':('05','AD',0),
-	'ORIGIN':('03','AD',1),
+	'DEC':('11','IS',1),
 	'START':('01','AD',1),
+	'END':('AD',0),
+	'ORIGIN':('03','AD',1),
 	'EQU':('04','AD',2),
+	'LTORG':('05','AD',0),
 	'DS':('01','DL',1),
 	'DC':('02','DL',1),
-	'END':('AD',0)
+	'GT':('00','CC',0)
 }
 
 REG={
@@ -30,7 +32,7 @@ REG={
 	'DREG':4
 }
 
-#handles END directive		
+		
 
 class vars():
 	LC=0
