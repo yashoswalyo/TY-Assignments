@@ -10,7 +10,7 @@ MOT={
 	'MOVER':('04','IS',2),
 	'MOVEM':('05','IS',2),
 	'COMP':('06','IS',2),
-	'BC':('07','IS',2),
+	'BC':('07','IS',1),
 	'DIV':('08','IS',2),
 	'READ':('09','IS',1),
 	'PRINT':('10','IS',1),
@@ -203,8 +203,6 @@ def detect_mn(k):
 		DS(vars.words[k+1])
 	elif(vars.words[k]=="DC"):
 		DC(vars.words[k+1])
-	#elif(vars.words[k]=="EQU"):
-		#EQU(vars.words)
 	else:
 		OTHERS(vars.words[k],k)
 	littab()
@@ -213,7 +211,10 @@ def detect_mn(k):
 
 
 def pass_one(alp:TextIOWrapper):
-	for line in alp:
+	cn=1
+	try:
+		for line in alp:
+			cn+=1
 			vars.words=line.split()
 			if (vars.LC>0):
 				vars.ifp.write(str(vars.LC))
@@ -240,6 +241,8 @@ def pass_one(alp:TextIOWrapper):
 					symbol()
 				k=1
 				detect_mn(k)
+	except Exception as e:
+		print(f"Error Occured at line{cn}")
 	vars.ifp.close()
 	vars.lit.close()
 	vars.tmp.close()
@@ -253,6 +256,7 @@ def pass_one(alp:TextIOWrapper):
 	for x in vars.pooltab:
 		pool.write(str(x)+"\n")
 	pool.close()
+	
 
 
 def getFile():
