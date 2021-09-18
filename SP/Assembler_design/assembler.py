@@ -13,7 +13,7 @@ MOT={
 	'BC':('07','IS',1),
 	'DIV':('08','IS',2),
 	'READ':('09','IS',1),
-	'PRINT':('10','IS',1),
+	'#print':('10','IS',1),
 	'DEC':('11','IS',1),
 	'START':('01','AD',1),
 	'END':('AD',0),
@@ -38,7 +38,7 @@ class vars():
 	LC=0
 	ifp=open("tables/inter_code.txt",mode="a")
 	ifp.truncate(0)
-	lit=open("tables/literal_table.txt","a+")    #vars.literals and their address containing file
+	lit=open("tables/literal_table.txt","a+")    
 	lit.truncate(0)
 	tmp=open("tables/temp.txt","a+")
 	tmp.truncate(0)
@@ -50,32 +50,32 @@ class vars():
 
 def delAllFiles():
 	try:
-		os.remove("tables/temp.txt")
-		os.remove("tables/label_table.txt")
+		os.remove("tables/inter_code.txt")
+		os.remove("tables/literal_table.txt")
 		os.remove("tables/symbol_table.txt")
-		# os.remove("output.txt")
+		os.remove("tables/pool_table.txt")
 	except:
-		print("no files found")
+		#print("no files found")
 		return
 
-#prints literal table
+##prints literal table
 def littab():
-	print("literal table:")
+	#print("literal table:")
 	vars.lit.seek(0,0)
-	for x in vars.lit:
-		print(x)
+	# for x in vars.lit:
+	# 	print(x)
 
 #prints pool table
 def pooltab2():
 	global pooltab
-	print("Pool Table:")
-	print(vars.pooltab)
+	#print("Pool Table:")
+	#print(vars.pooltab)
 
-#prints symbol table
+##prints symbol table
 def symbol():
 	global symtab
-	print("Symbol Table:")
-	print(vars.symtab)
+	#print("Symbol Table:")
+	#print(vars.symtab)
 
 #handles END directive
 def END():
@@ -162,21 +162,21 @@ def OTHERS(mnemonic,k):
 	vars.ifp.write("\t("+z[1]+","+z[0]+")\t")
 	i=0
 	y=z[-1]
-	#print("y="+str(y))
+	##print("y="+str(y))
 	for i in range(1,y+1):
 		vars.words[k+i]=vars.words[k+i].replace(",","")
 		if(vars.words[k+i] in REG.keys()):
 			vars.ifp.write("(RG,"+str(REG[vars.words[k+i]])+")")
 		elif("=" in vars.words[k+i]):
-			#print(vars.words[k+i])
+			##print(vars.words[k+i])
 			vars.lit.seek(0,2)
 			vars.lit.write(vars.words[k+i]+"\t**\n")
 			vars.lit.seek(0,0)
 			x=vars.lit.readlines()
-			#print(len(x))
+			##print(len(x))
 			vars.ifp.write("(L,"+str(len(x))+")")
 		else:
-			#print(vars.words,symtab)
+			##print(vars.words,symtab)
 			if(vars.words[k+i] not in vars.symtab.keys()):
 				vars.symtab[vars.words[k+i]]=("**",vars.symindex)
 				vars.ifp.write("(S,"+str(vars.symindex)+")")
@@ -184,7 +184,7 @@ def OTHERS(mnemonic,k):
 			else:
 				w=vars.symtab[vars.words[k+i]]
 				vars.ifp.write("(S,"+str(w[-1])+")")
-	#print(vars.symtab)
+	##print(vars.symtab)
 	vars.ifp.write("\n")
 	vars.LC+=1
  
@@ -211,38 +211,36 @@ def detect_mn(k):
 
 
 def pass_one(alp:TextIOWrapper):
-	cn=1
-	try:
-		for line in alp:
-			cn+=1
-			vars.words=line.split()
-			if (vars.LC>0):
-				vars.ifp.write(str(vars.LC))
-			print("LC: ",vars.LC)
-			print(line)
-			print(vars.words)
-			k=0
-			if vars.words[0] in MOT.keys():
-				print("Mnemonic: ",vars.words[0])
-				val = MOT[vars.words[0]]
-				detect_mn(k)
+	lc=1
+	for line in alp:
+		error_handler(line,lc)
+		lc+=1
+		vars.words=line.split()
+		if (vars.LC>0):
+			vars.ifp.write(str(vars.LC))
+		#print("LC: ",vars.LC)
+		#print(line)
+		#print(vars.words)
+		k=0
+		if vars.words[0] in MOT.keys():
+			#print("Mnemonic: ",vars.words[0])
+			val = MOT[vars.words[0]]
+			detect_mn(k)
+		else:
+			#print("Label: ",vars.words[0],"Mnemonic:",vars.words[1])
+			if vars.words[k] not in vars.symtab.keys():
+				vars.symtab[vars.words[k]]=(vars.LC,vars.symindex)
+				#ifp.write("\t(S,"+str(symindex)+")\t")	
+				vars.symindex+=1
+				symbol() 
 			else:
-				print("Label: ",vars.words[0],"Mnemonic:",vars.words[1])
-				if vars.words[k] not in vars.symtab.keys():
-					vars.symtab[vars.words[k]]=(vars.LC,vars.symindex)
-					#ifp.write("\t(S,"+str(symindex)+")\t")	
-					vars.symindex+=1
-					symbol() 
-				else:
-					x = vars.symtab[vars.words[k]]
-					if x[0] == "**":
-						print("yes")
-						vars.symtab[vars.words[k]] = (vars.LC,x[1])
-					symbol()
-				k=1
-				detect_mn(k)
-	except Exception as e:
-		print(f"Error Occured at line{cn}")
+				x = vars.symtab[vars.words[k]]
+				if x[0] == "**":
+					#print("yes")
+					vars.symtab[vars.words[k]] = (vars.LC,x[1])
+				symbol()
+			k=1
+			detect_mn(k)
 	vars.ifp.close()
 	vars.lit.close()
 	vars.tmp.close()
@@ -257,6 +255,35 @@ def pass_one(alp:TextIOWrapper):
 		pool.write(str(x)+"\n")
 	pool.close()
 	
+def error_handler(line:str,lc:int):
+	print(f"\nChecking line {lc} for errors")
+	l=line.split()
+	#print(l)
+	if l[0] in MOT.keys():
+		op = MOT[l[0]]
+		#print(op)
+		if (len(l)-1) < op[-1]:
+			print(f"[-] Error at line {lc}: Less operands than expcted")
+			exit(-1)
+		elif (len(l)-1) > op[-1]:
+			print(f"[-] Error at line {lc}: More operands than expcted")
+			exit(-1)
+		else:
+			print(f"[+] No errors at line {lc}")
+	elif l[1] in MOT.keys():
+		op = MOT[l[1]]
+		# print(op)
+		if (len(l)-2) < op[-1]:
+			print(f"[-] Error at line {lc}: Less operands than expcted")
+			exit(-1)
+		elif (len(l)-2) > op[-1]:
+			print(f"[-] Error at line {lc}: More operands than expcted")
+			exit(-1)
+		else:
+			print(f"[+] No errors at line {lc}")
+	else:
+		print(f"[-] Invalid Instruction at line {lc}: {line}")
+		exit(-1)
 
 
 def getFile():
