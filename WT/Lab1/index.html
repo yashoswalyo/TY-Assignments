@@ -1,11 +1,11 @@
 <html lang="en">
 <head>
-	<link rel="stylesheet" href="assets/css/styles.css">
-    <title>Traveller</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+	<title>Traveller</title>
 </head>
 <body>
 	<div class="title">
-        <h1 >Tales of Traveller</h1>
+        <center><h1 >Tales of Traveller</h1></center>
         <h3 class="Description">Welcome to My Library of Adventures</h3><hr>
         <br>
 	</div>
@@ -21,20 +21,25 @@
         <hr>
     </p>
     <p><b><h3>Best places to visit in India</h3></b></p>
-    <table class="places"> 
+    <table border="4"> 
         <tr  >
-            <td> <img src="assets/taj-mahal-agra.jpg" height="50%" width="50%" > </td>
-            <td><img src="assets/godi-sagar-rajasthan.jpg"height="50%" width="50%" ></td>
-            <td> <img src="assets/gate-way-of-india-mumbai.jpg" height="50%" width="50%"> </td>
-            <td> <img src="assets/Kailasa-temple.jpg" height="50%" width="50%"></td>
+            <td> <img src="assets/taj-mahal-agra.jpg" height="" width="190px" > </td>
+            <td> <img src="assets/godi-sagar-rajasthan.jpg"height="%" width="190px" ></td>
+            <td> <img src="assets/gate-way-of-india-mumbai.jpg" height="%" width="190px"> </td>
+            <td> <img src="assets/Kailasa-temple.jpg" height="%" width="190px"></td>
         </tr>
         <tr>
-            <td><b>1. Agra</b></td>
-            <td><b>2. Rajasthan</b></td>
-            <td><b>3. Mumbai</b></td>
+            <td><b>1. Taj Mahal</b></td>
+            <td><b>2. Godi Sagar</b></td>
+            <td><b>3. Gateway of India</b></td>
             <td><b>4. Ellora Caves</b></td>
         </tr>
     </table>
     <br>
+    <h4>Enter Place name to search</h4>
+    <form action="http://www.google.com/search" method="get">
+        <input type="text" name="q" placeholder="Enter here"/>
+        <input type="submit" value="Search" />
+    </form>
 </body>
 </html>
