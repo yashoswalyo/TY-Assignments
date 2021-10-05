@@ -45,9 +45,8 @@ def getRest(s:str):
 	s=s.replace(')(',' ').removeprefix('(').removesuffix(')').split()
 	if 'RG' in s[0]:
 		a = "(00"+s[0].split(',')[-1]+")"
-		return a
 	elif 'DL' in s[0]:
-		return a
+		a = "(000)"
 	else:
 		a = s[0].split(',')[-1]
 		if len(a)<3:
@@ -57,6 +56,8 @@ def getRest(s:str):
 				a = "(0"+a+")"
 		else :
 			a = "("+a+")"
+	if len(s) > 1:
+		a+=" (000)"
 	return a
 
 def pass_two(intermediateCode: TextIOWrapper):
@@ -75,8 +76,9 @@ def pass_two(intermediateCode: TextIOWrapper):
 			#print(words)
 			i=getInst(words[1])
 			r=getRest(words[2])
-			#print(i)
-			print("Line: "+str(l)+" "+i+r)
+			print(words[0]+"\t"+i+r)
+			#print("Line: "+str(l)+" "+i+r)
+			#print("Line: "+str(l)+" "+i+r)
 			
 	return
 
