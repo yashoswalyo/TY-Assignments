@@ -30,21 +30,54 @@ REG={
 }
 
 class file(object):
-    ifp=open("tables/inter_code.txt",mode="r")
-    lit=open("tables/literal_table.txt","r")
-    sym=open("tables/symbol_table.txt","r")
-    output=open("tables/output.txt","a+")
-    output.truncate(0)
+	ifp=open("tables/inter_code.txt",mode="r")
+	lit=open("tables/literal_table.txt","r")
+	sym=open("tables/symbol_table.txt","r")
+	output=open("tables/output.txt","a+")
+	output.truncate(0)
+
+def getInst(s:str):
+	i = s.removeprefix('(').removesuffix(')').split(sep=',')[-1]
+	return "("+i+")\t"
+
+def getRest(s:str):
+	a='(000)'
+	s=s.replace(')(',' ').removeprefix('(').removesuffix(')').split()
+	if 'RG' in s[0]:
+		a = "(00"+s[0].split(',')[-1]+")"
+		return a
+	elif 'DL' in s[0]:
+		return a
+	else:
+		a = s[0].split(',')[-1]
+		if len(a)<3:
+			if len(a)<2:
+				a = "(00"+a+")"
+			else:
+				a = "(0"+a+")"
+		else :
+			a = "("+a+")"
+	return a
 
 def pass_two(intermediateCode: TextIOWrapper):
-    for line in intermediateCode:
-        if "(AD,01)" in line:
-            pass
-        elif "DL" in line:
-            pass
-        else:
-            words = line.split()
-            print(words)
-
+	objctCode=''
+	i=''
+	r=''
+	l=0
+	for line in intermediateCode:
+		l+=1
+		if "(AD,01)" in line or "(AD,02)" in line:
+			pass
+		elif "DL" in line.split()[1]:
+			pass
+		else:
+			words = line.split()
+			#print(words)
+			i=getInst(words[1])
+			r=getRest(words[2])
+			#print(i)
+			print("Line: "+str(l)+" "+i+r)
+			
+	return
 
 pass_two(intermediateCode=file.ifp)
