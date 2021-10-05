@@ -40,6 +40,11 @@ def getInst(s:str):
 	i = s.removeprefix('(').removesuffix(')').split(sep=',')[-1]
 	return "("+i+")\t"
 
+def getS(s:str):
+	a = s.split(sep=',')[-1]
+	
+	return s
+
 def getRest(s:str):
 	a='(000)'
 	s=s.replace(')(',' ').removeprefix('(').removesuffix(')').split()
@@ -57,7 +62,8 @@ def getRest(s:str):
 		else :
 			a = "("+a+")"
 	if len(s) > 1:
-		a+=" (000)"
+		if 'S' in s[1]:
+			a = getS(s[1])
 	return a
 
 def pass_two(intermediateCode: TextIOWrapper):
