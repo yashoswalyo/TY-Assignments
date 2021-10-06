@@ -1,9 +1,44 @@
-*{
-	background-color: #bbbaba;
-	font-size: 2vw  
+body{
+	background-image: linear-gradient(rgb(255, 174, 0),yellow);
+	font-size: 3vmin ;
+	
 }
 
 div.title h1{
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 6vw;
+}
+
+div.title h1:hover{
+	text-shadow: 1.5px 1.5px 5px rgb(0, 0, 0);
+}
+
+hr {
+	width: 75%;
+	border-color: red;
+	border-style: solid;
+	border-width: 0.2;
+}
+
+.button {
+	background-color:rgb(29, 133, 230);
+	color: white;
+	border-radius: 2cm;
+	border-width: 0.2ch;
+	border-style: solid;
+}
+td {
+	border-width: 0.1ch;
+	border-radius: .2cm;
+	
+}
+
+table {
+	border-style:groove;
+	border-radius: .2cm;
+	
+}
+
+#q {
+	color: red;
 }
