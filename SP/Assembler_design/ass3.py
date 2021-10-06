@@ -29,10 +29,12 @@ REG={
 	'DREG':4
 }
 
-class file(object):
+class files(object):
 	ifp=open("tables/inter_code.txt",mode="r")
 	lit=open("tables/literal_table.txt","r")
+	litline = lit.read().splitlines()
 	sym=open("tables/symbol_table.txt","r")
+	symline = sym.read().splitlines()
 	output=open("tables/output.txt","a+")
 	output.truncate(0)
 
@@ -42,8 +44,22 @@ def getInst(s:str):
 
 def getS(s:str):
 	a = s.split(sep=',')[-1]
-	
-	return s
+	a = files.symline[int(a)].split(sep='\t')[-1]
+	return a
+
+def getL(s:str):
+	a = s.split(sep=',')[-1]
+	a = files.litline[int(a)-1].split(sep='\t')[-1]
+	return a
+
+def getC(s:str):
+	a = s.split(sep=',')[-1]
+	if len(a)<3:
+		if len(a)<2:
+			a = " (00"+a+")"
+		else:
+			a = " (0"+a+")"
+	return a
 
 def getRest(s:str):
 	a='(000)'
@@ -52,6 +68,8 @@ def getRest(s:str):
 		a = "(00"+s[0].split(',')[-1]+")"
 	elif 'DL' in s[0]:
 		a = "(000)"
+	elif 'S' in s[0]:
+			a = "("+getS(s[0])+")"
 	else:
 		a = s[0].split(',')[-1]
 		if len(a)<3:
@@ -63,7 +81,11 @@ def getRest(s:str):
 			a = "("+a+")"
 	if len(s) > 1:
 		if 'S' in s[1]:
-			a = getS(s[1])
+			a += " ("+getS(s[1])+")"
+		if 'L' in s[1]:
+			a += " ("+getL(s[1])+")"
+		if 'C' in s[1]:
+			a += getC(s[1])
 	return a
 
 def pass_two(intermediateCode: TextIOWrapper):
@@ -88,4 +110,4 @@ def pass_two(intermediateCode: TextIOWrapper):
 			
 	return
 
-pass_two(intermediateCode=file.ifp)
+pass_two(intermediateCode=files.ifp)
