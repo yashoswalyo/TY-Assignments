@@ -11,7 +11,6 @@ MOT={
 	'BC':('07','IS',1),
 	'DIV':('08','IS',2),
 	'READ':('09','IS',1),
-	'#print':('10','IS',1),
 	'DEC':('11','IS',1),
 	'START':('01','AD',1),
 	'END':('AD',0),
@@ -104,10 +103,12 @@ def pass_two(intermediateCode: TextIOWrapper):
 			#print(words)
 			i=getInst(words[1])
 			r=getRest(words[2])
-			print(words[0]+"\t"+i+r)
+			objctCode += (words[0]+"\t"+i+r+"\n")
 			#print("Line: "+str(l)+" "+i+r)
 			#print("Line: "+str(l)+" "+i+r)
-			
+	files.output.writelines(objctCode)
 	return
 
+
+##Program execution starts here
 pass_two(intermediateCode=files.ifp)
