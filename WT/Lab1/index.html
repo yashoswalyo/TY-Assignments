@@ -6,7 +6,7 @@
 <body>
 	<div class="title">
 		<center><h1 >Tales of Traveller</h1></center>
-		<h3 class="Description">Welcome to My Library of Adventures</h3><hr>
+		<h3 class="Description" id="asd">Welcome to My Library of Adventures</h3><hr>
 		<br>
 	</div>
 	<p>
@@ -39,7 +39,10 @@
 	<h4>Enter Place name to search</h4>
 	<form action="http://www.google.com/search" method="get">
 		<input id="q" type="text" name="q" placeholder="Enter here"/>
-		<input class="button" type="submit" value="Search" />
+		<input class="button" onclick="window.print()" type="submit" value="Search" />
 	</form>
 </body>
+<script>
+	document.getElementById("asd").innerHTML = "asjkdsbdgja";
+</script>
 </html>

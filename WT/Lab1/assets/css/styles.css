@@ -1,5 +1,5 @@
 body{
-	background-image: linear-gradient(rgb(255, 174, 0),yellow);
+	background-image: linear-gradient(rgb(255, 153, 0),yellow,rgb(255, 136, 0)); */
 	font-size: 3vmin ;
 	
 }
@@ -10,7 +10,13 @@ div.title h1{
 }
 
 div.title h1:hover{
-	text-shadow: 1.5px 1.5px 5px rgb(0, 0, 0);
+	text-shadow: 1.5px 1.5px 5px rgb(255, 0, 0);
+}
+
+div h3.Description {
+	background-color: black;
+	color: white;
+	padding-left: 8;
 }
 
 hr {
