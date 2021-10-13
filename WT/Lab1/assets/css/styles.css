@@ -22,10 +22,41 @@
 	padding: 10px;
 }
 body{
-	background-image: linear-gradient(rgb(59, 59, 59), rgb(0, 0, 0));
+	background-image: linear-gradient(rgb(0, 0, 0),rgb(49, 48, 48));
 	height: max-content;
 } 
 div h1.my-name {
 	color: white;
 	font-style: oblique;
 }
+
+.navbar {
+	overflow: hidden;
+	background-color: #333;
+	font-size: 15px;
+	border-bottom: white;
+}
+
+span a{
+	display: block;
+	color: #f2f2f2;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+a:hover {
+	background-color: #fff;
+	color: black;
+}
+
+@media screen and (min-width: 600px) {
+	span a{ 
+		float: left;
+		display: block;
+		color: #f2f2f2;
+		text-align: center;
+		padding: 14px 16px;
+		text-decoration: none;
+	}
+  }
