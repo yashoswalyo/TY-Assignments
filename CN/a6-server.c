@@ -29,7 +29,7 @@ void write_file(int sockfd)
 int main()
 {
 	char *ip = "127.0.0.1";
-	int port = 8080;
+	int port = 7896;
 	int e;
 
 	int sockfd, new_sock;
