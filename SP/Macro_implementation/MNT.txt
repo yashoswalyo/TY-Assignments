@@ -1,0 +1,3 @@
+CLEARMEM	2	1 	0 	0
+ADD3NUM	3	0 	6 	0
+INCR	2	1 	13 	0
