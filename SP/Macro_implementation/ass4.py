@@ -44,10 +44,7 @@ def process_MDT(words):
 				MDT.write(f"{i} ")
 	MDTP+=1
 	MDT.write('\n')
-#pointers
-##ass4 file hehe
-import re
-import os
+
 #Global Pointers
 MDTP = 0 #Macro Definition Table Pointer
 KPDTP = 0 #Keyword Parameter Default Table Pointer
