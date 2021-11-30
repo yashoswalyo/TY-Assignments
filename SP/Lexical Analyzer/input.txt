@@ -1,0 +1,8 @@
+#include <stdio.h>
+main()
+{
+	int var ;
+	var = 10 ;
+	printf ( " The value of a is %d ", var ) ;
+	return 0 ;
+}
