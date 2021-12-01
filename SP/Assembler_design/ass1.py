@@ -77,7 +77,7 @@ def OTHERS(key,k):
 				vars.ifp.write("(S,"+str(w[-1])+")")
 	vars.ifp.write("\n")
 	vars.LC+=z[-1]
- 
+
 def detect_mn(k):
 	if(vars.words[k]=="START"):
 		vars.LC=int(vars.words[1])
