@@ -34,7 +34,6 @@ int main()
 	for (k = 0; k < 5; k++) {
 		for (i = 0; i < n; i++) {
 			if (f[i] == 0) {
-
 				int flag = 0;
 				for (j = 0; j < m; j++) {
 					if (need[i][j] > avail[j]){
@@ -49,16 +48,21 @@ int main()
 						avail[y] += alloc[i][y];
 					f[i] = 1;
 				}
+				printf("Vector is: ");
+				for (int h = 0; h < 3; h++)
+				{
+					printf("%d ",avail[h]);
+				}
+				printf("\n");
 			}
+			
 		}
 	}
 
 	printf("Following is the SAFE Sequence\n");
 	for (i = 0; i < n - 1; i++)
 		printf(" P%d ->", ans[i]);
-	printf(" P%d", ans[n - 1]);
+	printf(" P%d\n", ans[n - 1]);
 
 	return (0);
-
-	// This code is contributed by Deep Baldha (CandyZack)
 }
