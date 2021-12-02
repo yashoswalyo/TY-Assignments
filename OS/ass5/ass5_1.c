@@ -24,7 +24,7 @@ void *writer(void *wno)
 		int ct = 40;
 		ss = ss + ct;
 		while (ss>=60){mm=mm+1;ss=ss%60;if (mm>=60){mm=00;hh=hh+1;if(hh>=24){hh=0;mm=0;}}}
-		printf("\nWriter %d modified seconds to: %d\n", (*((int *)wno)), ct);
+		printf("\nWriter %d: modified seconds to: %d\n", (*((int *)wno)), ct);
 	}
 	sem_post(&wrt);
 }
