@@ -35,7 +35,7 @@ int main()
 {
 	int sockfd;
 	struct sockaddr_in servaddr;
-	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+	sockfd = socket(AF_INET,SOCK_DGRAM, 0);
 	if (sockfd == -1)
 	{
 		printf("socket creation failed...\n");

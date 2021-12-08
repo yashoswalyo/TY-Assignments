@@ -12,7 +12,7 @@ int main()
 	char senddata[50], data[50];
 	int val, count, i, port;
 	struct sockaddr_in ser, cli;
-	printf("\n\n Server Running ");
+	printf("\n\n Server Running\n................................................. ");
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
 		perror("\n Socket Creation Error");
@@ -59,8 +59,7 @@ int main()
 		if (count != val)
 		{
 			strcpy(senddata, "packet missing");
-			send(connect, &count,
-					 sizeof(count), 0);
+			send(connect, &count, sizeof(count), 0);
 			send(connect, senddata, strlen(senddata), 0);
 		}
 		else
@@ -69,8 +68,7 @@ int main()
 			printf("\n The data is :%s", data);
 			count++;
 			strcpy(senddata, "send nextdata");
-			send(connect, &count,
-					 sizeof(count), 0);
+			send(connect, &count, sizeof(count), 0);
 			send(connect, senddata, strlen(senddata), 0);
 		}
 		printf("\n The Expected Packet now is: %d \n", count);
