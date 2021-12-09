@@ -153,9 +153,9 @@ def detect_mn(k):
 	elif(vars.words[k]=='END'):
 		END()
 	elif(vars.words[k]=="LTORG"):
-	   LTORG()
+		LTORG()
 	elif(vars.words[k]=="ORIGIN"):
-	   ORIGIN(vars.words[k+1])
+		ORIGIN(vars.words[k+1])
 	elif(vars.words[k]=="DS"):
 		DS(vars.words[k+1])
 	elif(vars.words[k]=="DC"):

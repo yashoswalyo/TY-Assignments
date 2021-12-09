@@ -1,0 +1,11 @@
+	BEGIN 500
+NEXT RD Sum
+	MVR R1, N
+	MVM R1, Sum
+	AD R1, R2
+	ML R1, X
+	JP NEXT
+X DCN 4
+Sum DST 5
+N DCN 10
+	STOP
