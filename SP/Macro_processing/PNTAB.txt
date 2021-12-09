@@ -1,9 +1,0 @@
-&X
-&N
-&REG 
-&A
-&B
-&C
-&MEM
-&REG2
-&INCR 
