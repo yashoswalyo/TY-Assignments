@@ -41,9 +41,9 @@ class map_coloring():
 		for state in self.states:
 			self.colors_of_states[state] = self.get_color_for_state(state)
 			print(f"Color Used For State {state} is {self.colors_of_states[state]}")
-			print(Fore.BLUE+"\n\n\t\tThe Solution Is - ")
-			for key in self.colors_of_states:
-				print(Fore.BLUE+key + Fore.WHITE+' -> ', self.colors_of_states[key])
+		print(Fore.BLUE+"\n\n\t\tThe Solution Is - ")
+		for key in self.colors_of_states:
+			print(Fore.BLUE+key + Fore.WHITE+' -> ', self.colors_of_states[key])
 
 class cryptarithmetic():
 	solved = False

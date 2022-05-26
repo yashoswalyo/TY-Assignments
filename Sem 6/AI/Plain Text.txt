@@ -3,3 +3,50 @@
 5c/ Crossword
 
 https://github.com/AhmedKamruddin/UCS411-Artificial-Intelligence
+
+Pseudo Code 
+ASS 5
+    A.  map_coloring
+    function map_coloring(states)
+    {
+        for state in states{
+            for color in availableColors
+            {
+                if promising(state,color)
+                {
+                    colors_of_states[s] = color
+                }
+            }
+            colors_of_states[s]=get_color_for_state(s)
+        }
+        for op in color
+        {
+            print("%s -> %s",op, color[op]);
+        }
+    }
+    function promising(state,color)
+    {
+        //fsck
+    }
+
+    B. Cryptarithmetic
+    function solve()
+    {
+        char W1 = "TWO";
+        char W2 = "TWO";
+        char SS = "FOUR";
+        combined_string = W1+W2+SS;
+        set[len(combined_string)];
+
+        for (c=0;c<len(combined_string);c++)
+            for(i=0;i<len(set);i++)
+                if set[i]!=combined_string[c]
+                    set[c]=combined_string[c];
+        if len(set)>10
+            print("No Solution");
+            return 0;
+        print("Solution is - ");
+        print(" \t%s\n+\t%s\n----------\n\t%s\n\n",W1,W2,SS);
+        equation[3] = [W1,W2,SS];
+        
+    }

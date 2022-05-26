@@ -72,7 +72,7 @@ class Puzzle():
 				if newBoard not in self.generatedBoards:
 					self.generatedBoards.append(newBoard)
 					self.queue.append((self.calcHeuristic(newBoard), newBoard))
-					self.queue.sort(reverse=True) [(5,[])(4,[])(3,[])]
+					self.queue.sort(reverse=True)
 			i+=1
 		return None
 
