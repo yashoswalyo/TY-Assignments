@@ -14,14 +14,15 @@ def bfs(start, end, x_capacity, y_capacity):
 	visited = []
 	#visited.append(start)
 	print(f"{front}\n{visited}\n{path}\n----------------")
-
+	cost = 0
 	while(not (not front)):
 		current = front.pop()
+		cost+=1
 		x = current[0]
 		y = current[1]
 		path.append(current)
 		if x == end or y == end:
-			print("Found!")
+			print(f"Found! + cost = {cost}")
 			return path
 		# rule 1
 		if current[0] < x_capacity and ([x_capacity, current[1]] not in visited):
