@@ -35,7 +35,7 @@ int lookup_word(char *word);
       }
 }
 
-[;'")(:] {
+"("|")"|"{"|"}"|"["|"]"|";"|"," {
       if(state != LOOKUP) {
             add_word(state, yytext);
       } else {

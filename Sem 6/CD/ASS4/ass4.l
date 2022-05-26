@@ -6,9 +6,9 @@
 
 %%
 [0-9]+|[0-9]*\.[0-9]+ {
-                        yylval.p = atof(yytext);
-                        return num;
-                      }
+  yylval.p = atof(yytext);
+  return num;
+}
 
 sin {return SIN;}
 cos {return COS;}

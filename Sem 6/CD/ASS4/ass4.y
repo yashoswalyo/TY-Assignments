@@ -4,13 +4,12 @@
 %}
 
 %union	//to define possible symbol types
-{double p;}
+{int p;}
 %token<p>num
 %token SIN COS TAN LOG SQRT
 
 %left '+''-'	//lowest precedence
 %left '*''/'	//highest precedence
-%nonassoc uminu	//no associativity
 %type<p>exp	//Sets the type for non-terminal
 %%
 
@@ -18,7 +17,7 @@
 ss: exp {printf(" Answer = %g\n",$1);}
 
 /* for binary arithmatic operators */
-exp:	exp'+'exp   { $$=$1+$3; }
+exp:	 exp'+'exp  { $$=$1+$3; }
       |exp'-'exp  { $$=$1-$3; }
       |exp'*'exp  { $$=$1*$3; }
       |exp'/'exp  {
