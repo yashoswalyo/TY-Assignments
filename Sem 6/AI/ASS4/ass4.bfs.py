@@ -53,7 +53,7 @@ class Puzzle():
 
 	def bestFirstSearch(self):
 		self.calcHeuristic(self.board)
-		self.queue.append((self.calcHeuristic(self.board), self.board))
+		self.queue.append((self.calcHeuristic(self.board), self.board)) 
 		self.generatedBoards.append(self.board)
 		i = 0
 		while(1<1000):
@@ -72,7 +72,7 @@ class Puzzle():
 				if newBoard not in self.generatedBoards:
 					self.generatedBoards.append(newBoard)
 					self.queue.append((self.calcHeuristic(newBoard), newBoard))
-					self.queue.sort(reverse=True)
+					self.queue.sort(reverse=True) [(5,[])(4,[])(3,[])]
 			i+=1
 		return None
 
@@ -122,7 +122,6 @@ class Robot():
 
 	def bestFirstSearch(self):
 		steps = 0
-
 		while (self.queue) :
 			input()
 			print(f"Steps taken: {steps}")

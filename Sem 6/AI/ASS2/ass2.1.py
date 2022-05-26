@@ -2,10 +2,7 @@
 Water-Jug solution using Breadth First Search Algorithm
 '''
 
-print("Solution for water jug problem")
-x_capacity = int(input("Enter Jug 1 capacity:"))
-y_capacity = int(input("Enter Jug 2 capacity:"))
-end = int(input("Enter target volume:"))
+
 
 def bfs(start, end, x_capacity, y_capacity):
 	path = []
@@ -15,8 +12,8 @@ def bfs(start, end, x_capacity, y_capacity):
 	#visited.append(start)
 	print(f"{front}\n{visited}\n{path}\n----------------")
 	cost = 0
-	while(not (not front)):
-		current = front.pop()
+	while(front):
+		current = front.pop() #[0,3]
 		cost+=1
 		x = current[0]
 		y = current[1]
@@ -46,7 +43,7 @@ def bfs(start, end, x_capacity, y_capacity):
 
 		# rule 5
 		#(x, y) -> (min(x + y, x_capacity), max(0, x + y - x_capacity)) if y > 0
-		if current[1] > 0 and ([min(x + y, x_capacity), max(0, x + y - x_capacity)] not in visited):
+		if current[1] > 0 and ([min(x + y, x_capacity), max(0, x + y - x_capacity)] not in visited):#[3,0]
 			front.append([min(x + y, x_capacity), max(0, x + y - x_capacity)])
 			visited.append([min(x + y, x_capacity), max(0, x + y - x_capacity)])
 
@@ -72,7 +69,13 @@ start = [0, 0]
 
 # condition for getting a solution:
 # the target volume 'end' should be a multiple of gcd(a,b)
-
+print("Solution for water jug problem")
+# x_capacity = int(input("Enter Jug 1 capacity:"))
+# y_capacity = int(input("Enter Jug 2 capacity:"))
+# end = int(input("Enter target volume:"))
+x_capacity=4
+y_capacity=3
+end = 2
 if end % gcd(x_capacity,y_capacity) == 0:
 	print(bfs(start, end, x_capacity, y_capacity))
 else:
