@@ -5,7 +5,7 @@
 https://github.com/AhmedKamruddin/UCS411-Artificial-Intelligence
 
 Pseudo Code 
-ASS 5
+ASS 5:
     A.  map_coloring
     function map_coloring(states)
     {
@@ -30,7 +30,7 @@ ASS 5
     }
 
     B. Cryptarithmetic
-    function solve()
+    function Crypt()
     {
         char W1 = "TWO";
         char W2 = "TWO";
@@ -48,5 +48,43 @@ ASS 5
         print("Solution is - ");
         print(" \t%s\n+\t%s\n----------\n\t%s\n\n",W1,W2,SS);
         equation[3] = [W1,W2,SS];
-        
+        solve(set[],values[9],visited[9],equation[])
     }
+    function solve(set[],values[9],visited[9],equation[])
+    {
+        if len(set)==len(values)
+            map={}
+            for letter, val in zip(letters, values):
+				map[letter] = val
+			if map[equation[0][0]] == 0 or map[equation[1][0]] == 0 or map[equation[2][0]] == 0:
+				return
+			word1, word2, res = "", "", ""
+			for c in equation[0]:
+				word1 += str(map[c])
+			for c in equation[1]:
+				word2 += str(map[c])
+			for c in equation[2]:
+				res += str(map[c])
+			if int(word1) + int(word2) == int(res):
+				self.count += 1
+				print(Fore.GREEN+f"Result {self.count} = {word1} + {word2} = {res}\n")
+				solved = True
+			return
+
+        l=strlen(values)
+        for(i=0;i<10;i++)
+            if !visited[i]:
+                visited[i] = True
+                values[l]=i
+                solve(set[],values[9],visited[9],equation)
+                values[l]='\0'
+                visited[i] = False
+    }
+
+ASS4:
+    A. bfs
+    1. 8 puzzle
+        function bfs(board,heuristic)
+        {
+            
+        }
