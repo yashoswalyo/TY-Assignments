@@ -41,27 +41,27 @@ class Puzzle():
 		for i in range(0, 3):
 			for j in range(0, 3):
 				if all_config[i][j] != 0:
-	# Check If We Can Move To The Top
+					# Check If We Can Move To The Top
 					if self.isSafe(i - 1, j):
 						if all_config[i - 1][j] == 0:
-	# Move Tile
+							# Move Tile
 							config1[i - 1][j] = config1[i][j]
 							config1[i][j] = 0
 							config_boards.append(config1)
-	# Check If We Can Move To The Bottom
+					# Check If We Can Move To The Bottom
 					if self.isSafe(i + 1, j):
 						if all_config[i + 1][j] == 0:
-	# Move Tile
+						# Move Tile
 							config2[i + 1][j] = config2[i][j]
 							config2[i][j] = 0
 							config_boards.append(config2)
-	# Check If We Can Move To The Right
+					# Check If We Can Move To The Right
 					if self.isSafe(i, j + 1):
 						if all_config[i][j + 1] == 0:
 							config3[i][j + 1] = config3[i][j]
 							config3[i][j] = 0
 							config_boards.append(config3)
-	# Check If We Can Move To The Left
+					# Check If We Can Move To The Left
 					if self.isSafe(i, j - 1):
 						if all_config[i][j - 1] == 0:
 							config4[i][j - 1] = config4[i][j]
@@ -99,7 +99,7 @@ class Puzzle():
 				print(f"\nIn {self.steps} Steps\n")
 				break
 			boards_configs = self.find_all_configs(new_config)
-	# Calculating Heuristic Values For All Child Configurations
+			# Calculating Heuristic Values For All Child Configurations
 			for i in boards_configs:
 				visited.append(i)
 				open_list.append(i)
