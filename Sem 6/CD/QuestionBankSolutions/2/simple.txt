@@ -1,0 +1,38 @@
+x = 2;           
+x = 2+3;          
+root2 = sqrt(2);
+if(houseIsOnFire) 
+{
+    scream();
+    runAway();
+    if (a==5 )
+    {
+
+    }
+    else if(temperature < 100) {
+        puts("hooray");
+    }
+    switch(numberOfCows) {
+    case 1:
+        puts("cow");
+        break;
+    case 2:
+        puts("cowen");
+        break;
+    default:
+        puts("cows");
+        break;
+    }
+}
+while((c = getchar()) != EOF) 
+{    
+    switch(c) 
+    {
+        case 'e':
+        case 'E':
+            break;
+        default:
+            putchar(c);
+            break;
+    }
+}

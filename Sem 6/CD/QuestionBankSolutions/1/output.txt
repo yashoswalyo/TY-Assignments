@@ -1,0 +1,50 @@
+Token Listing for Subset of C languages
+Lexeme	Line		Token
+int		1		Keyword
+ main		1		Identifier
+(		1		Delimiter
+)		1		Delimiter
+{		1		Delimiter
+    int		2		Keyword
+ n		2		Identifier
+=		2		Logical Operator
+8		2		Constant
+,		2		Delimiter
+ m		2		Identifier
+=		2		Logical Operator
+1		2		Constant
+0		2		Constant
+,		2		Delimiter
+ add		2		Identifier
+;		2		Delimiter
+n		3		Identifier
+=		3		Logical Operator
+n		3		Identifier
+/		3		Operator
+2		3		Constant
+;		3		Delimiter
+m		4		Identifier
+=		4		Logical Operator
+2		4		Constant
+*		4		Operator
+m		4		Identifier
+;		4		Delimiter
+add		5		Identifier
+=		5		Logical Operator
+n		5		Identifier
++		5		Operator
+m		5		Identifier
+;		5		Delimiter
+return		6		Identifier
+ 0		6		Constant
+;		6		Delimiter
+}		7		Delimiter
+
+
+Symbol Table
+Index		Symbol
+1		main
+2		n
+3		m
+4		add
+5		return
