@@ -1,2 +1,2 @@
 # TY-Assignments
-All Third year assignments of B.Tech Computer Engineering, Vishwakarma University
+All Third year assignments of B.Tech Computer Engineering, Vishwakarma University.
